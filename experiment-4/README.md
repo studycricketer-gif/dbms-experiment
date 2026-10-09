@@ -20,7 +20,9 @@ Using the Employee schema, write and execute SQL queries with INNER JOIN, LEFT J
 
 The queries use the CompanyDB database and the Employee–Department–Project schema from the reference experiment. The reference document defines 30 employees, 5 departments and 8 projects. The Employee table contains emp_id, emp_name, salary, hire_date, dept_id and project_id, with foreign keys to Department and Project.
 
-> *USE CompanyDB;*
+```sql
+USE CompanyDB;
+```
 
 **SCHEMA REFERENCE**
 
@@ -38,27 +40,21 @@ The source document creates Department, Project and Employee in this order and e
 
 Display employee names, salaries and their department names using an INNER JOIN.
 
-> *SELECT*
->
-> *e.emp_id,*
->
-> *e.emp_name,*
->
-> *e.salary,*
->
-> *d.dept_name*
->
-> *FROM Employee e*
->
-> *INNER JOIN Department d*
->
-> *ON e.dept_id = d.dept_id*
->
-> *ORDER BY e.emp_id;*
->
-> **Output**
->
-> <img src="images/image6.png" style="width:6.0809in;height:6.35289in" />
+```sql
+SELECT
+e.emp_id,
+e.emp_name,
+e.salary,
+d.dept_name
+FROM Employee e
+INNER JOIN Department d
+ON e.dept_id = d.dept_id
+ORDER BY e.emp_id;
+```
+
+**Output**
+
+<img src="images/image6.png" style="width:6.0809in;height:6.35289in" />
 
 The full query returns all 30 employees. The Department values come from the Department table in the reference data.
 
@@ -66,23 +62,17 @@ The full query returns all 30 employees. The Department values come from the Dep
 
 Display all departments and the employees belonging to them. LEFT JOIN keeps every department from the left table even if no matching employee exists.
 
-> *SELECT*
->
-> *d.dept_id,*
->
-> *d.dept_name,*
->
-> *e.emp_name,*
->
-> *e.salary*
->
-> *FROM Department d*
->
-> *LEFT JOIN Employee e*
->
-> *ON d.dept_id = e.dept_id*
->
-> *ORDER BY d.dept_id, e.emp_id;*
+```sql
+SELECT
+d.dept_id,
+d.dept_name,
+e.emp_name,
+e.salary
+FROM Department d
+LEFT JOIN Employee e
+ON d.dept_id = e.dept_id
+ORDER BY d.dept_id, e.emp_id;
+```
 
 **  
 OUTPUT**
@@ -95,29 +85,20 @@ In the supplied data, all five departments have employees, so no NULL employee r
 
 Compare two employees belonging to the same department. The Employee table is joined to itself using two aliases.
 
-> *SELECT*
->
-> *e1.emp_name AS employee_1,*
->
-> *e2.emp_name AS employee_2,*
->
-> *e1.dept_id,*
->
-> *e1.salary AS salary_1,*
->
-> *e2.salary AS salary_2*
->
-> *FROM Employee e1*
->
-> *INNER JOIN Employee e2*
->
-> *ON e1.dept_id = e2.dept_id*
->
-> *AND e1.emp_id \< e2.emp_id*
->
-> *ORDER BY e1.dept_id, e1.emp_id, e2.emp_id*
->
-> *LIMIT 10;*
+```sql
+SELECT
+e1.emp_name AS employee_1,
+e2.emp_name AS employee_2,
+e1.dept_id,
+e1.salary AS salary_1,
+e2.salary AS salary_2
+FROM Employee e1
+INNER JOIN Employee e2
+ON e1.dept_id = e2.dept_id
+AND e1.emp_id < e2.emp_id
+ORDER BY e1.dept_id, e1.emp_id, e2.emp_id
+LIMIT 10;
+```
 
 **  
 OUTPUT (first 10 rows)**
@@ -130,27 +111,19 @@ The condition e1.emp_id \< e2.emp_id prevents the same pair from being repeated 
 
 Display employee name, department, project and salary by joining Employee, Department and Project.
 
-> *SELECT*
->
-> *e.emp_name,*
->
-> *d.dept_name,*
->
-> *p.project_name,*
->
-> *e.salary*
->
-> *FROM Employee e*
->
-> *INNER JOIN Department d*
->
-> *ON e.dept_id = d.dept_id*
->
-> *INNER JOIN Project p*
->
-> *ON e.project_id = p.project_id*
->
-> *ORDER BY d.dept_name, e.emp_name;*
+```sql
+SELECT
+e.emp_name,
+d.dept_name,
+p.project_name,
+e.salary
+FROM Employee e
+INNER JOIN Department d
+ON e.dept_id = d.dept_id
+INNER JOIN Project p
+ON e.project_id = p.project_id
+ORDER BY d.dept_name, e.emp_name;
+```
 
 **OUTPUT** <img src="images/image7.png" style="width:6.90139in;height:7.31944in" />
 
@@ -163,29 +136,20 @@ The reference experiment uses the same three-table join pattern and orders the r
 
 Display employees whose salary is greater than the average salary of their own department. The inner query refers to the outer Employee row, making it a correlated subquery.
 
-> *SELECT*
->
-> *e.emp_id,*
->
-> *e.emp_name,*
->
-> *e.salary,*
->
-> *e.dept_id*
->
-> *FROM Employee e*
->
-> *WHERE e.salary \> (*
->
-> *SELECT AVG(e2.salary)*
->
-> *FROM Employee e2*
->
-> *WHERE e2.dept_id = e.dept_id*
->
-> *)*
->
-> *ORDER BY e.dept_id, e.salary DESC;*
+```sql
+SELECT
+e.emp_id,
+e.emp_name,
+e.salary,
+e.dept_id
+FROM Employee e
+WHERE e.salary > (
+SELECT AVG(e2.salary)
+FROM Employee e2
+WHERE e2.dept_id = e.dept_id
+)
+ORDER BY e.dept_id, e.salary DESC;
+```
 
 **  
 OUTPUT**<img src="images/image2.png" style="width:6.90139in;height:6.05556in" />
@@ -196,27 +160,19 @@ The department averages used by this query are consistent with the reference exp
 
 Find departments that have at least one employee with a salary greater than 80,000.
 
-> *SELECT*
->
-> *d.dept_id,*
->
-> *d.dept_name*
->
-> *FROM Department d*
->
-> *WHERE EXISTS (*
->
-> *SELECT 1*
->
-> *FROM Employee e*
->
-> *WHERE e.dept_id = d.dept_id*
->
-> *AND e.salary \> 80000*
->
-> *)*
->
-> *ORDER BY d.dept_id;*
+```sql
+SELECT
+d.dept_id,
+d.dept_name
+FROM Department d
+WHERE EXISTS (
+SELECT 1
+FROM Employee e
+WHERE e.dept_id = d.dept_id
+AND e.salary > 80000
+)
+ORDER BY d.dept_id;
+```
 
 **  
 OUTPUT**
@@ -229,31 +185,21 @@ EXISTS returns TRUE as soon as the subquery finds at least one qualifying employ
 
 MySQL can express the intersection of two employee sets by requiring the employee ID to occur in both subqueries. Here, the two sets are: employees in IT and employees whose salary is greater than 70,000.
 
-> *SELECT emp_id, emp_name, salary*
->
-> *FROM Employee*
->
-> *WHERE emp_id IN (*
->
-> *SELECT emp_id*
->
-> *FROM Employee*
->
-> *WHERE dept_id = 1*
->
-> *)*
->
-> *AND emp_id IN (*
->
-> *SELECT emp_id*
->
-> *FROM Employee*
->
-> *WHERE salary \> 70000*
->
-> *)*
->
-> *ORDER BY emp_id;*
+```sql
+SELECT emp_id, emp_name, salary
+FROM Employee
+WHERE emp_id IN (
+SELECT emp_id
+FROM Employee
+WHERE dept_id = 1
+)
+AND emp_id IN (
+SELECT emp_id
+FROM Employee
+WHERE salary > 70000
+)
+ORDER BY emp_id;
+```
 
 <img src="images/image3.png" style="width:6.90139in;height:3.13889in" />
 
@@ -263,31 +209,21 @@ The result contains only employees that satisfy both sets, which is the behavior
 
 Simulate EXCEPT by selecting employees with salary greater than 70,000 while excluding employees belonging to IT.
 
-> *SELECT emp_id, emp_name, salary*
->
-> *FROM Employee*
->
-> *WHERE emp_id IN (*
->
-> *SELECT emp_id*
->
-> *FROM Employee*
->
-> *WHERE salary \> 70000*
->
-> *)*
->
-> *AND emp_id NOT IN (*
->
-> *SELECT emp_id*
->
-> *FROM Employee*
->
-> *WHERE dept_id = 1*
->
-> *)*
->
-> *ORDER BY emp_id;*
+```sql
+SELECT emp_id, emp_name, salary
+FROM Employee
+WHERE emp_id IN (
+SELECT emp_id
+FROM Employee
+WHERE salary > 70000
+)
+AND emp_id NOT IN (
+SELECT emp_id
+FROM Employee
+WHERE dept_id = 1
+)
+ORDER BY emp_id;
+```
 
 <img src="images/image4.png" style="width:6.90139in;height:3.77778in" />
 
@@ -297,63 +233,45 @@ EXPLAIN shows how the MySQL optimizer intends to execute a SELECT statement. It 
 
 **A. EXPLAIN for INNER JOIN**
 
-> *EXPLAIN*
->
-> *SELECT*
->
-> *e.emp_name,*
->
-> *d.dept_name*
->
-> *FROM Employee e*
->
-> *INNER JOIN Department d*
->
-> *ON e.dept_id = d.dept_id*
->
-> *WHERE e.salary \> 70000;*
+```sql
+EXPLAIN
+SELECT
+e.emp_name,
+d.dept_name
+FROM Employee e
+INNER JOIN Department d
+ON e.dept_id = d.dept_id
+WHERE e.salary > 70000;
+```
 
 **B. EXPLAIN for Correlated Subquery**
 
-> *EXPLAIN*
->
-> *SELECT*
->
-> *e.emp_name,*
->
-> *e.salary*
->
-> *FROM Employee e*
->
-> *WHERE e.salary \> (*
->
-> *SELECT AVG(e2.salary)*
->
-> *FROM Employee e2*
->
-> *WHERE e2.dept_id = e.dept_id*
->
-> *);*
+```sql
+EXPLAIN
+SELECT
+e.emp_name,
+e.salary
+FROM Employee e
+WHERE e.salary > (
+SELECT AVG(e2.salary)
+FROM Employee e2
+WHERE e2.dept_id = e.dept_id
+);
+```
 
 **C. EXPLAIN for EXISTS**
 
-> *EXPLAIN*
->
-> *SELECT d.dept_name*
->
-> *FROM Department d*
->
-> *WHERE EXISTS (*
->
-> *SELECT 1*
->
-> *FROM Employee e*
->
-> *WHERE e.dept_id = d.dept_id*
->
-> *AND e.salary \> 80000*
->
-> *);*
+```sql
+EXPLAIN
+SELECT d.dept_name
+FROM Department d
+WHERE EXISTS (
+SELECT 1
+FROM Employee e
+WHERE e.dept_id = d.dept_id
+AND e.salary > 80000
+);
+```
 
 **10. COMPARISON OF EXECUTION PLANS**
 

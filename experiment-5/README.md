@@ -1,4 +1,6 @@
-**EXPERIMENT - 5**
+```sql
+EXPERIMENT - 5
+```
 
 **AIM**
 
@@ -81,29 +83,24 @@ The hierarchy view shows the immediate reporting relationship. A department head
 
 Test an update on a simple employee hierarchy view and then test an update on the grouped department salary summary view.
 
-**UPDATE Employee**
-
-**SET salary = salary + 1000**
-
-**WHERE emp_id = 6;**
-
-**SELECT emp_id, emp_name, salary**
-
-**FROM Employee**
-
-**WHERE emp_id = 6;**
+```sql
+UPDATE Employee
+SET salary = salary + 1000
+WHERE emp_id = 6;
+SELECT emp_id, emp_name, salary
+FROM Employee
+WHERE emp_id = 6;
+```
 
 **SELECT**
 
-**dept_id,**
-
-**AVG(salary) AS average_salary**
-
-**FROM Employee**
-
-**WHERE dept_id = 1**
-
-**GROUP BY dept_id;**
+```sql
+dept_id,
+AVG(salary) AS average_salary
+FROM Employee
+WHERE dept_id = 1
+GROUP BY dept_id;
+```
 
 **Output**<img src="images/image2.png" style="width:6.27083in;height:4.17708in" />
 
@@ -113,63 +110,50 @@ The first UPDATE is expected to fail because the employee_hierarchy view contain
 
 Display the reporting chain beginning with department heads and recursively follow manager relationships.
 
-**WITH RECURSIVE reporting_chain AS (**
+```sql
+WITH RECURSIVE reporting_chain AS (
+```
 
 **SELECT**
 
-**emp_id,**
-
-**emp_name,**
-
-**dept_id,**
-
-**1 AS level,**
-
-**CAST(emp_name AS CHAR(500)) AS reporting_path**
-
-**FROM Employee**
-
-**WHERE dept_id = 1**
+```sql
+emp_id,
+emp_name,
+dept_id,
+1 AS level,
+CAST(emp_name AS CHAR(500)) AS reporting_path
+FROM Employee
+WHERE dept_id = 1
+```
 
 **UNION ALL**
 
 **SELECT**
 
-**e.emp_id,**
-
-**e.emp_name,**
-
-**e.dept_id,**
-
-**rc.level + 1,**
-
-**CONCAT(rc.reporting_path, ' -\> ', e.emp_name)**
-
-**FROM Employee e**
-
-**JOIN reporting_chain rc**
-
-**ON e.dept_id = rc.dept_id**
-
-**WHERE e.emp_id \> rc.emp_id**
-
-**)**
+```sql
+e.emp_id,
+e.emp_name,
+e.dept_id,
+rc.level + 1,
+CONCAT(rc.reporting_path, ' -> ', e.emp_name)
+FROM Employee e
+JOIN reporting_chain rc
+ON e.dept_id = rc.dept_id
+WHERE e.emp_id > rc.emp_id
+)
+```
 
 **SELECT**
 
-**emp_id,**
-
-**emp_name,**
-
-**dept_id,**
-
-**level,**
-
-**reporting_path**
-
-**FROM reporting_chain**
-
-**ORDER BY level, emp_id;**
+```sql
+emp_id,
+emp_name,
+dept_id,
+level,
+reporting_path
+FROM reporting_chain
+ORDER BY level, emp_id;
+```
 
 **Output**<img src="images/image1.png" style="width:6.32292in;height:7.3125in" />
 

@@ -1,4 +1,6 @@
-**EXPERIMENT - 6**
+```sql
+EXPERIMENT - 6
+```
 
 **AIM**
 
@@ -69,11 +71,7 @@ Validate salary changes before an existing Employee row is updated.
 UPDATE Employee
 SET salary = 20000
 WHERE emp_id = 6;
-```
-
-**Valid Update:**
-
-```sql
+Valid Update:
 UPDATE Employee
 SET salary = 85000
 WHERE emp_id = 6;
@@ -85,9 +83,8 @@ WHERE emp_id = 6;
 
 Store the old and new salary values after a successful salary update.
 
-**Trigger code:**
-
 ```sql
+Trigger code:
 DELIMITER //
 CREATE TRIGGER audit_salary_update
 AFTER UPDATE ON Employee
@@ -101,11 +98,7 @@ VALUES
 END IF;
 END//
 DELIMITER ;
-```
-
-**CODE To Check Trigger:**
-
-```sql
+CODE To Check Trigger:
 DELIMITER //
 -- Test salary update
 UPDATE Employee
