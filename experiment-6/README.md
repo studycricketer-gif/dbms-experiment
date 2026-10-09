@@ -1,6 +1,4 @@
-```sql
-EXPERIMENT - 6
-```
+**EXPERIMENT - 6**
 
 **AIM**
 
