@@ -1,6 +1,6 @@
 # DBMS Experiments
 
-- [Experiment 1](experiment%201.pdf)
+- [Experiment 1 – ER diagram for Indian e-commerce platform](experiment-1/README.md) ([PDF](experiment%201.pdf))
 - [Experiment 3 – Database creation, SELECT, aggregates, GROUP BY, HAVING](experiment-3/README.md)
 - [Experiment 4 – Joins, subqueries, EXISTS, EXPLAIN](experiment-4/README.md)
 - [Experiment 5 – Views, updatability, recursive CTE](experiment-5/README.md)
